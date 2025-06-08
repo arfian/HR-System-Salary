@@ -38,7 +38,7 @@ func (h *handler) Register(c *gin.Context) {
 		return
 	}
 
-	res, err := h.userService.Register(c.Request.Context(), dataUser.User, dataUser.UserDetail, dataUser.UserPreference)
+	res, err := h.userService.Register(c.Request.Context(), dataUser.User, dataUser.Employee)
 	if err != nil {
 		helper.ResponseError(c, err)
 		return
@@ -53,7 +53,7 @@ func (h *handler) Register(c *gin.Context) {
 
 func (h *handler) Login(c *gin.Context) {
 	var (
-		dataUser model.UserModel
+		dataUser model.AuthUserModel
 	)
 
 	if err := c.ShouldBind(&dataUser); err != nil {

@@ -13,7 +13,4 @@ type IUserHandler interface {
 
 	// (GET /user/)
 	GetUser(ctx *gin.Context)
-
-	// // (GET /user/statistic)
-	// GetUserStatistic(ctx *gin.Context)
 }

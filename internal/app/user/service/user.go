@@ -25,7 +25,7 @@ func New(userRepo port.IUserRepository) port.IUserService {
 	}
 }
 
-func (s *service) Register(ctx context.Context, user model.UserModel, ud model.UserDetailModel, up model.UserPreferenceModel) (token string, err error) {
+func (s *service) Register(ctx context.Context, user model.AuthUserModel, em model.EmployeeModel) (token string, err error) {
 	username, qerr := s.userRepo.GetUserByUsername(ctx, user.Username)
 	if qerr != nil {
 		return "", qerr
@@ -45,38 +45,33 @@ func (s *service) Register(ctx context.Context, user model.UserModel, ud model.U
 		return "", qerr
 	}
 
-	ud.UserId = user.ID.String()
-	qerr = s.userRepo.InsertUserDetail(ctx, ud)
+	em.Username = user.Username
+	qerr = s.userRepo.InsertEmployee(ctx, em)
 	if qerr != nil {
 		return "", qerr
 	}
 
-	up.UserId = user.ID.String()
-	qerr = s.userRepo.InsertUserPreference(ctx, up)
-	if qerr != nil {
-		return "", qerr
-	}
-	tokenString, err := createToken(user, ud)
+	tokenString, err := createToken(user, em)
 
 	return tokenString, err
 }
 
-func createToken(user model.UserModel, ud model.UserDetailModel) (string, error) {
+func createToken(user model.AuthUserModel, em model.EmployeeModel) (string, error) {
 	configData := config.GetConfig()
 	claims := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
-		"id":        user.ID,
-		"username":  user.Username,
-		"firstname": ud.FirstName,
-		"lastname":  ud.LastName,
-		"exp":       time.Now().Add(time.Hour).Unix(),
-		"iat":       time.Now().Unix(),
+		"id":       user.ID,
+		"username": user.Username,
+		"fullname": em.Fullname,
+		"rolename": em.Rolename,
+		"exp":      time.Now().Add(time.Hour).Unix(),
+		"iat":      time.Now().Unix(),
 	})
 	tokenString, err := claims.SignedString([]byte(configData.JWT.SigningKey))
 
 	return tokenString, err
 }
 
-func (s service) Login(ctx context.Context, user model.UserModel) (token string, err error) {
+func (s service) Login(ctx context.Context, user model.AuthUserModel) (token string, err error) {
 	users, qerr := s.userRepo.GetPasswordByUsername(ctx, user.Username)
 	if len(users) == 0 || qerr != nil {
 		return "", errors.New("incorrect username or password")
@@ -87,7 +82,7 @@ func (s service) Login(ctx context.Context, user model.UserModel) (token string,
 		return "", errors.New("incorrect username or password")
 	}
 
-	ud, qerr := s.userRepo.GetUserDetailById(ctx, users[0].ID.String())
+	ud, qerr := s.userRepo.GetEmployeeByUsername(ctx, users[0].Username)
 	if qerr != nil {
 		return "", qerr
 	}
@@ -102,19 +97,14 @@ func (s service) GetUser(ctx context.Context, username string) (res *payload.Use
 		return nil, errors.New("user not found")
 	}
 
-	ud, qerr := s.userRepo.GetUserDetailById(ctx, users[0].ID.String())
+	em, qerr := s.userRepo.GetEmployeeByUsername(ctx, username)
 	if qerr != nil {
 		return nil, qerr
 	}
 
-	up, qerr := s.userRepo.GetUserPreference(ctx, users[0].ID.String())
-	if qerr != nil {
-		return nil, qerr
-	}
 	resUser := &payload.User{
-		User:           users[0],
-		UserDetail:     ud,
-		UserPreference: up,
+		User:     users[0],
+		Employee: em,
 	}
 
 	return resUser, err

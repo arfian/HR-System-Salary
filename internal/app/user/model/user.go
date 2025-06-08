@@ -6,52 +6,52 @@ import (
 	"github.com/go-openapi/strfmt"
 )
 
-type UserModel struct {
+type RoleUserModel struct {
 	ID        strfmt.UUID4 `json:"id" gorm:"type:uuid;default:uuid_generate_v4()"`
-	Username  string       `json:"username" validate:"required"`
-	Password  string       `json:"password" validate:"required"`
+	Rolename  string       `json:"rolename" validate:"required"`
+	CreatedBy string       `json:"created_by" validate:"required"`
+	UpdatedBy string       `json:"updated_by"`
 	CreatedAt time.Time    `json:"created_at" gorm:"autoCreateTime"`
 	UpdatedAt time.Time    `json:"updated_at" gorm:"autoUpdateTime"`
 	DeletedAt time.Time    `json:"deleted_at"`
 }
 
-func (u UserModel) TableName() string {
-	return "users"
+func (u RoleUserModel) TableName() string {
+	return "role_user"
 }
 
-type UserDetailModel struct {
-	ID          strfmt.UUID4 `json:"id" gorm:"type:uuid;default:uuid_generate_v4()"`
-	UserId      string       `json:"user_id"`
-	FirstName   string       `json:"firstname" gorm:"column:firstname"`
-	LastName    string       `json:"lastname" gorm:"column:lastname"`
-	Gender      string       `json:"gender" validate:"required,oneof=MALE FEMALE"`
-	City        string       `json:"city"`
-	Description string       `json:"description" gorm:"default:null"`
-	CreatedAt   time.Time    `json:"created_at" gorm:"autoCreateTime"`
-	UpdatedAt   time.Time    `json:"updated_at" gorm:"autoUpdateTime"`
-	DeletedAt   time.Time    `json:"deleted_at"`
+type AuthUserModel struct {
+	ID        strfmt.UUID4 `json:"id" gorm:"type:uuid;default:uuid_generate_v4()"`
+	Username  string       `json:"username" validate:"required"`
+	Password  string       `json:"password" validate:"required"`
+	IsActive  bool         `json:"is_active"`
+	LastLogin time.Time    `json:"last_login"`
+	CreatedBy string       `json:"created_by" validate:"required"`
+	UpdatedBy string       `json:"updated_by"`
+	CreatedAt time.Time    `json:"created_at" gorm:"autoCreateTime"`
+	UpdatedAt time.Time    `json:"updated_at" gorm:"autoUpdateTime"`
+	DeletedAt time.Time    `json:"deleted_at"`
 }
 
-func (u UserDetailModel) TableName() string {
-	return "user_detail"
+func (u AuthUserModel) TableName() string {
+	return "auth_users"
 }
 
-type UserPreferenceModel struct {
-	ID              strfmt.UUID4 `json:"id" gorm:"type:uuid;default:uuid_generate_v4()"`
-	UserId          string       `json:"user_id"`
-	PreferredGender string       `json:"preferred_gender" validate:"required,oneof=MALE FEMALE"`
-	PreferredCity   string       `json:"preferred_city"`
-	CreatedAt       time.Time    `json:"created_at" gorm:"autoCreateTime"`
-	UpdatedAt       time.Time    `json:"updated_at" gorm:"autoUpdateTime"`
-	DeletedAt       time.Time    `json:"deleted_at"`
+type EmployeeModel struct {
+	ID           strfmt.UUID4 `json:"id" gorm:"type:uuid;default:uuid_generate_v4()"`
+	Username     string       `json:"username"`
+	Fullname     string       `json:"fullname"`
+	Rolename     string       `json:"rolename"`
+	Gender       string       `json:"gender" validate:"required,oneof=MALE FEMALE"`
+	DateJoin     time.Time    `json:"date_join"`
+	SalaryAmount float32      `json:"salary_amount" gorm:"type:numeric(10,2);not null"`
+	CreatedBy    string       `json:"created_by" validate:"required"`
+	UpdatedBy    string       `json:"updated_by"`
+	CreatedAt    time.Time    `json:"created_at" gorm:"autoCreateTime"`
+	UpdatedAt    time.Time    `json:"updated_at" gorm:"autoUpdateTime"`
+	DeletedAt    time.Time    `json:"deleted_at"`
 }
 
-func (u UserPreferenceModel) TableName() string {
-	return "user_preference"
-}
-
-type UserStatisticModel struct {
-	UserId string `json:"user_id"`
-	Like   int    `json:"like"`
-	Pass   string `json:"pass"`
+func (u EmployeeModel) TableName() string {
+	return "employee"
 }

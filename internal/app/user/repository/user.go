@@ -20,64 +20,34 @@ func NewRepository(db *db.GormDB) port.IUserRepository {
 	return repository{db: db}
 }
 
-func (r repository) InsertUser(ctx context.Context, user model.UserModel) (model.UserModel, error) {
+func (r repository) InsertUser(ctx context.Context, user model.AuthUserModel) (model.AuthUserModel, error) {
 	trx := transaction.GetTrxContext(ctx, r.db)
 	qres := trx.Create(&user).Error
 
 	return user, qres
 }
 
-func (r repository) InsertUserDetail(ctx context.Context, ud model.UserDetailModel) error {
+func (r repository) InsertEmployee(ctx context.Context, ud model.EmployeeModel) error {
 	trx := transaction.GetTrxContext(ctx, r.db)
 	qres := trx.Create(&ud).Error
 
 	return qres
 }
 
-func (r repository) InsertUserPreference(ctx context.Context, up model.UserPreferenceModel) error {
-	trx := transaction.GetTrxContext(ctx, r.db)
-	qres := trx.Create(&up).Error
-
-	return qres
-}
-
-func (r repository) GetUserByUsername(ctx context.Context, username string) (user []model.UserModel, err error) {
+func (r repository) GetUserByUsername(ctx context.Context, username string) (user []model.AuthUserModel, err error) {
 	trx := transaction.GetTrxContext(ctx, r.db)
 	err = trx.Select("id, username, created_at, updated_at").Where("username = ?", username).Find(&user).Error
 	return user, err
 }
 
-func (r repository) GetPasswordByUsername(ctx context.Context, username string) (user []model.UserModel, err error) {
+func (r repository) GetPasswordByUsername(ctx context.Context, username string) (user []model.AuthUserModel, err error) {
 	trx := transaction.GetTrxContext(ctx, r.db)
 	err = trx.Select("id, password, username, created_at, updated_at").Where("username = ?", username).Find(&user).Error
 	return user, err
 }
 
-func (r repository) GetUserDetailById(ctx context.Context, id string) (user model.UserDetailModel, err error) {
+func (r repository) GetEmployeeByUsername(ctx context.Context, username string) (user model.EmployeeModel, err error) {
 	trx := transaction.GetTrxContext(ctx, r.db)
-	err = trx.Where("user_id = ?", id).First(&user).Error
+	err = trx.Where("username = ?", username).First(&user).Error
 	return user, err
 }
-
-func (r repository) GetUserPreference(ctx context.Context, userID string) (res model.UserPreferenceModel, err error) {
-	trx := transaction.GetTrxContext(ctx, r.db)
-	err = trx.Where("user_id = ?", userID).First(&res).Error
-	return res, err
-}
-
-// func (r repository) PutUser(ctx context.Context, ud model.UserDetailModel, up model.UserPreferenceModel) (resultUD model.UserDetailModel, resultUP model.UserPreferenceModel, err error) {
-// 	return ud, up, nil
-// }
-
-// func (r repository) GetUser(ctx context.Context, userID string) (resultUD model.UserDetailModel, resultUP model.UserPreferenceModel, err error) {
-// 	var (
-// 		ud model.UserDetailModel
-// 		up model.UserPreferenceModel
-// 	)
-// 	return ud, up, nil
-// }
-
-// func (r repository) GetUserStatistic(ctx context.Context, userID string) (us model.UserStatisticModel, err error) {
-// 	var user model.UserStatisticModel
-// 	return user, nil
-// }
