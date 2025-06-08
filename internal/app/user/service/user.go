@@ -46,6 +46,8 @@ func (s *service) Register(ctx context.Context, user model.AuthUserModel, em mod
 	}
 
 	em.Username = user.Username
+	em.CreatedBy = user.Username
+	user.CreatedBy = user.Username
 	qerr = s.userRepo.InsertEmployee(ctx, em)
 	if qerr != nil {
 		return "", qerr

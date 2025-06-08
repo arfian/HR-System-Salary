@@ -26,7 +26,7 @@ type AuthUserModel struct {
 	Password  string       `json:"password" validate:"required"`
 	IsActive  bool         `json:"is_active"`
 	LastLogin time.Time    `json:"last_login"`
-	CreatedBy string       `json:"created_by" validate:"required"`
+	CreatedBy string       `json:"created_by"`
 	UpdatedBy string       `json:"updated_by"`
 	CreatedAt time.Time    `json:"created_at" gorm:"autoCreateTime"`
 	UpdatedAt time.Time    `json:"updated_at" gorm:"autoUpdateTime"`
@@ -34,7 +34,7 @@ type AuthUserModel struct {
 }
 
 func (u AuthUserModel) TableName() string {
-	return "auth_users"
+	return "auth_user"
 }
 
 type EmployeeModel struct {
@@ -43,9 +43,9 @@ type EmployeeModel struct {
 	Fullname     string       `json:"fullname"`
 	Rolename     string       `json:"rolename"`
 	Gender       string       `json:"gender" validate:"required,oneof=MALE FEMALE"`
-	DateJoin     time.Time    `json:"date_join"`
+	DateJoin     string       `json:"date_join"`
 	SalaryAmount float32      `json:"salary_amount" gorm:"type:numeric(10,2);not null"`
-	CreatedBy    string       `json:"created_by" validate:"required"`
+	CreatedBy    string       `json:"created_by"`
 	UpdatedBy    string       `json:"updated_by"`
 	CreatedAt    time.Time    `json:"created_at" gorm:"autoCreateTime"`
 	UpdatedAt    time.Time    `json:"updated_at" gorm:"autoUpdateTime"`
