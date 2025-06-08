@@ -1,8 +1,6 @@
 package handler
 
 import (
-	"net/http"
-
 	"hr-system-salary/internal/app/user/model"
 	"hr-system-salary/internal/app/user/payload"
 	"hr-system-salary/internal/app/user/port"
@@ -44,8 +42,7 @@ func (h *handler) Register(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, &helper.Response{
-		Success: true,
+	helper.ResponseData(c, &helper.Response{
 		Message: "register successfully",
 		Data:    res,
 	})
@@ -74,8 +71,7 @@ func (h *handler) Login(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, &helper.Response{
-		Success: true,
+	helper.ResponseData(c, &helper.Response{
 		Message: "login successfully",
 		Data:    res,
 	})
@@ -89,8 +85,7 @@ func (h *handler) GetUser(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, &helper.Response{
-		Success: true,
+	helper.ResponseData(c, &helper.Response{
 		Message: "get user successfully",
 		Data:    res,
 	})

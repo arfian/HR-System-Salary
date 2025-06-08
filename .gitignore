@@ -38,3 +38,4 @@ coverage.cov
 coverage.out
 coverage.html
 doc/api/swagger.*
+log/*

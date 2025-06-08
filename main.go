@@ -7,10 +7,12 @@ import (
 	"hr-system-salary/cmd/rest"
 	"hr-system-salary/config"
 	appSetup "hr-system-salary/internal/setup"
+	"hr-system-salary/pkg/log"
 )
 
 func main() {
 	// config init
+	log.InitZeroLog()
 	config.InitConfig()
 	// conf := config.GetConfig()
 

@@ -7,18 +7,27 @@ import (
 	"strings"
 
 	"github.com/gin-gonic/gin"
+	"github.com/rs/zerolog/log"
 	"gorm.io/gorm"
 )
 
 type Response struct {
-	Data    interface{} `json:"data"`
-	Success bool        `json:"success"`
-	Message string      `json:"message"`
+	Data      interface{} `json:"data"`
+	Success   bool        `json:"success"`
+	Message   string      `json:"message"`
+	RequestId any         `json:"request_id"`
 }
 
 type ResponseErrorData struct {
 	Type string `json:"data"`
 	Code int64  `json:"success"`
+}
+
+func ResponseData(c *gin.Context, res *Response) {
+	requestID, _ := c.Get("requestID")
+	res.Success = true
+	res.RequestId = requestID
+	c.JSON(200, res)
 }
 
 func ResponseError(c *gin.Context, err error, opts ...interface{}) {
@@ -51,6 +60,8 @@ func ResponseError(c *gin.Context, err error, opts ...interface{}) {
 		t = "NotFound"
 	}
 
+	requestID, _ := c.Get("requestID")
+	log.Error().Err(err).Str("request_id", requestID.(string)).Msg(d)
 	c.AbortWithStatusJSON(code, &Response{
 		Success: false,
 		Message: d,
@@ -58,5 +69,6 @@ func ResponseError(c *gin.Context, err error, opts ...interface{}) {
 			Type: t,
 			Code: int64(code),
 		},
+		RequestId: requestID,
 	})
 }
