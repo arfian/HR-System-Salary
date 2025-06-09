@@ -44,6 +44,7 @@ CREATE TABLE IF NOT EXISTS attendance (
     employee VARCHAR(50) NOT NULL,
     check_in TIMESTAMPTZ NOT NULL DEFAULT NOW(),
     check_out TIMESTAMPTZ NULL,
+    status VARCHAR(20) NOT NULL,
     created_by VARCHAR(50) NOT NULL,
     updated_by VARCHAR(50) NULL,
     created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),

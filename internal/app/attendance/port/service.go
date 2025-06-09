@@ -6,7 +6,7 @@ import (
 )
 
 type IAttendanceService interface {
-	AddAttendanceEmployee(ctx context.Context, username string) (*model.AttendanceModel, error)
+	AddAttendanceEmployee(ctx context.Context, username string) (res *model.AttendanceModel, err error)
 
 	// BulkInserAttendance(ctx context.Context, attendances []model.AttendanceModel) error
 }

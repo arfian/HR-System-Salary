@@ -22,14 +22,13 @@ func NewRepository(db *db.GormDB) port.IAttendanceRepository {
 
 func (r repository) InsertAttendanceEmployee(ctx context.Context, attendance model.AttendanceModel) (model.AttendanceModel, error) {
 	trx := transaction.GetTrxContext(ctx, r.db)
-	qres := trx.Create(&attendance).Error
+	qres := trx.Save(&attendance).Error
 
 	return attendance, qres
 }
 
-func (r repository) GetCheckInAttendance(ctx context.Context, userId string, attendanceDate string) ([]model.AttendanceModel, error) {
+func (r repository) GetttendanceByUserDate(ctx context.Context, userId string, attendanceDate string) (res []model.AttendanceModel, err error) {
 	trx := transaction.GetTrxContext(ctx, r.db)
-	attendance := []model.AttendanceModel{}
-	err := trx.Where("employee = ?", userId).Find(&attendance).Error
-	return attendance, err
+	err = trx.Where("employee = ?", userId).Where("check_in::date = ?", attendanceDate).Find(&res).Error
+	return res, err
 }

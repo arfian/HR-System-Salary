@@ -23,7 +23,7 @@ func New(attendanceRepo port.IAttendanceRepository, userRepo userPort.IUserRepos
 	}
 }
 
-func (s *service) AddAttendanceEmployee(ctx context.Context, username string) (*model.AttendanceModel, error) {
+func (s *service) AddAttendanceEmployee(ctx context.Context, username string) (res *model.AttendanceModel, err error) {
 	users, qerr := s.userRepo.GetUserByUsername(ctx, username)
 	if len(users) == 0 || qerr != nil {
 		return nil, errors.New("user not found")
@@ -38,24 +38,30 @@ func (s *service) AddAttendanceEmployee(ctx context.Context, username string) (*
 		Employee: string(users[0].ID),
 	}
 
-	checkIn, qerr := s.attendanceRepo.GetCheckInAttendance(ctx, string(users[0].ID), t.Format("2006-01-02"))
+	resData, qerr := s.attendanceRepo.GetttendanceByUserDate(ctx, string(users[0].ID), t.Format("2006-01-02"))
 	if qerr != nil {
 		return nil, qerr
 	}
 
-	if len(checkIn) == 0 {
+	if len(resData) == 0 {
 		attendance.CheckIn = time.Now()
 		attendance.CreatedBy = users[0].Username
-	} else if len(checkIn) > 0 {
+		attendance.Status = "CHECK IN"
+	} else if len(resData) > 0 && resData[0].Status == "CHECK IN" {
+		attendance = resData[0]
 		attendance.CheckOut = time.Now()
 		attendance.UpdatedBy = users[0].Username
+		attendance.DeletedAt = nil
+		attendance.Status = "CHECK OUT"
 	} else {
+		attendance = resData[0]
+		attendance.Status = ""
 		return nil, nil
 	}
 
-	res, qerr := s.attendanceRepo.InsertAttendanceEmployee(ctx, attendance)
+	resAttendence, qerr := s.attendanceRepo.InsertAttendanceEmployee(ctx, attendance)
 	if qerr != nil {
 		return nil, qerr
 	}
-	return &res, nil
+	return &resAttendence, nil
 }

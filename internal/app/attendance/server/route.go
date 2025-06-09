@@ -15,5 +15,5 @@ var (
 )
 
 func (r routes) New(router *gin.RouterGroup, handler port.IAttendanceHandler) {
-	router.POST("/attendance/employee", handler.AddAttendanceEmployee)
+	router.POST("/employee", handler.AddAttendanceEmployee)
 }

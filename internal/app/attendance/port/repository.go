@@ -8,7 +8,7 @@ import (
 type IAttendanceRepository interface {
 	InsertAttendanceEmployee(ctx context.Context, attendance model.AttendanceModel) (model.AttendanceModel, error)
 
-	GetCheckInAttendance(ctx context.Context, userId string, attendanceDate string) ([]model.AttendanceModel, error)
+	GetttendanceByUserDate(ctx context.Context, userId string, attendanceDate string) (res []model.AttendanceModel, err error)
 
 	// BulkInsertAttendance(ctx context.Context, attendances []model.AttendanceModel) error
 }

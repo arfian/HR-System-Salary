@@ -11,11 +11,12 @@ type AttendanceModel struct {
 	Employee  string       `json:"employee" validate:"required"`
 	CheckIn   time.Time    `json:"check_in"`
 	CheckOut  time.Time    `json:"check_out"`
+	Status    string       `json:"status"`
 	CreatedBy string       `json:"created_by"`
 	UpdatedBy string       `json:"updated_by"`
 	CreatedAt time.Time    `json:"created_at" gorm:"autoCreateTime"`
 	UpdatedAt time.Time    `json:"updated_at" gorm:"autoUpdateTime"`
-	DeletedAt time.Time    `json:"deleted_at" gorm:"default:null"`
+	DeletedAt *time.Time   `json:"deleted_at" gorm:"default:null"`
 }
 
 func (u AttendanceModel) TableName() string {
