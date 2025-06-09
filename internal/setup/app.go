@@ -16,6 +16,11 @@ import (
 	userPorts "hr-system-salary/internal/app/user/port"
 	userRepo "hr-system-salary/internal/app/user/repository"
 	userService "hr-system-salary/internal/app/user/service"
+
+	attendanceHandler "hr-system-salary/internal/app/attendance/handler"
+	attendancePorts "hr-system-salary/internal/app/attendance/port"
+	attendanceRepo "hr-system-salary/internal/app/attendance/repository"
+	attendanceService "hr-system-salary/internal/app/attendance/service"
 )
 
 type InternalAppStruct struct {
@@ -25,8 +30,9 @@ type InternalAppStruct struct {
 }
 
 type initRepositoriesApp struct {
-	userRepo   userPorts.IUserRepository
-	TrxHandler transaction.ISqlTransaction
+	userRepo       userPorts.IUserRepository
+	attendanceRepo attendancePorts.IAttendanceRepository
+	TrxHandler     transaction.ISqlTransaction
 	// HealthCheckRepo healthCheckPorts.IHealthCheckRepository
 	dbInstance *gorm.DB
 	// cache      cache.ICache
@@ -34,6 +40,7 @@ type initRepositoriesApp struct {
 
 func initAppRepo(gormDB *db.GormDB, initializeApp *InternalAppStruct) {
 	initializeApp.Repositories.userRepo = userRepo.NewRepository(gormDB)
+	initializeApp.Repositories.attendanceRepo = attendanceRepo.NewRepository(gormDB)
 	// initializeApp.Repositories.HealthCheckRepo = healthCheckRepo.NewHealthCheckRepository(gormDB.DB, rc)
 
 	// Initiate trxRepo handler
@@ -44,22 +51,26 @@ func initAppRepo(gormDB *db.GormDB, initializeApp *InternalAppStruct) {
 }
 
 type initServicesApp struct {
-	UserService userPorts.IUserService
+	UserService       userPorts.IUserService
+	AttendanceService attendancePorts.IAttendanceService
 	// HealthCheckService healthCheckPorts.IHealthCheckService
 }
 
 func initAppService(initializeApp *InternalAppStruct) {
 	// initializeApp.Services.HealthCheckService = healthCheckService.NewService(initializeApp.Repositories.HealthCheckRepo)
 	initializeApp.Services.UserService = userService.New(initializeApp.Repositories.userRepo)
+	initializeApp.Services.AttendanceService = attendanceService.New(initializeApp.Repositories.attendanceRepo, initializeApp.Repositories.userRepo)
 }
 
 // HANDLER INIT
 type InitHandlerApp struct {
-	UserHandler userPorts.IUserHandler
+	UserHandler       userPorts.IUserHandler
+	AttendanceHandler attendancePorts.IAttendanceHandler
 	// HealthCheckHandler healthCheckPorts.IHealthCheckHandler
 }
 
 func initAppHandler(initializeApp *InternalAppStruct) {
 	// initializeApp.Handler.HealthCheckHandler = healthCheckHandler.NewHealthCheckHandler(initializeApp.Services.HealthCheckService)
 	initializeApp.Handler.UserHandler = userHandler.New(initializeApp.Services.UserService)
+	initializeApp.Handler.AttendanceHandler = attendanceHandler.New(initializeApp.Services.AttendanceService)
 }
