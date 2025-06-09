@@ -10,10 +10,9 @@ import (
 
 type JWTClaims struct {
 	jwt.RegisteredClaims
-	ID        string `json:"id"`
-	Username  string `json:"username"`
-	FirstName string `json:"firstname"`
-	LastName  string `json:"lastname"`
+	ID       string `json:"id"`
+	Username string `json:"username"`
+	Rolename string `json:"rolename"`
 }
 
 func ParseJWTToken(tokenString string) (*JWTClaims, error) {

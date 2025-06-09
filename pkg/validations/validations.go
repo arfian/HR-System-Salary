@@ -47,3 +47,7 @@ func IsWeekend(t time.Time) bool {
 	day := t.Weekday()
 	return day == time.Saturday || day == time.Sunday
 }
+
+func IsSameDateMonth(t1, t2 time.Time) bool {
+	return t1.Year() == t2.Year() && t1.Month() == t2.Month()
+}

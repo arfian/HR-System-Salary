@@ -10,7 +10,7 @@ type AttendanceModel struct {
 	ID        strfmt.UUID4 `json:"id" gorm:"type:uuid;default:uuid_generate_v4()"`
 	Employee  string       `json:"employee" validate:"required"`
 	CheckIn   time.Time    `json:"check_in"`
-	CheckOut  time.Time    `json:"check_out"`
+	CheckOut  time.Time    `json:"check_out" gorm:"default:null"`
 	Status    string       `json:"status"`
 	CreatedBy string       `json:"created_by"`
 	UpdatedBy string       `json:"updated_by"`

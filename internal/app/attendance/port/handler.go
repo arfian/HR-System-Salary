@@ -10,5 +10,5 @@ type IAttendanceHandler interface {
 	AddAttendanceEmployee(ctx *gin.Context)
 
 	// (POST /attendance/admin)
-	// AddAttendanceAdmin(ctx *gin.Context)
+	AddAttendanceAdmin(ctx *gin.Context)
 }

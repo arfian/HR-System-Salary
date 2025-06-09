@@ -6,8 +6,10 @@ import (
 	"time"
 
 	"hr-system-salary/internal/app/attendance/model"
+	"hr-system-salary/internal/app/attendance/payload"
 	"hr-system-salary/internal/app/attendance/port"
 	userPort "hr-system-salary/internal/app/user/port"
+	"hr-system-salary/pkg/helper"
 	"hr-system-salary/pkg/validations"
 )
 
@@ -38,7 +40,7 @@ func (s *service) AddAttendanceEmployee(ctx context.Context, username string) (r
 		Employee: string(users[0].ID),
 	}
 
-	resData, qerr := s.attendanceRepo.GetttendanceByUserDate(ctx, string(users[0].ID), t.Format("2006-01-02"))
+	resData, qerr := s.attendanceRepo.GetAttendanceByUserDate(ctx, string(users[0].ID), t.Format("2006-01-02"))
 	if qerr != nil {
 		return nil, qerr
 	}
@@ -64,4 +66,34 @@ func (s *service) AddAttendanceEmployee(ctx context.Context, username string) (r
 		return nil, qerr
 	}
 	return &resAttendence, nil
+}
+
+func (s *service) BulkInserAttendance(ctx context.Context, param payload.ParamBulkAttendance, username string) error {
+	listWeekdays := helper.ListWeekdays(param.StartDate, param.EndDate)
+	checkAttendances, qerr := s.attendanceRepo.GetDateRangeAttendanceByUser(ctx, param.EmployeeID, param.StartDate, param.EndDate)
+	if qerr != nil {
+		return qerr
+	}
+
+	listAttendances := helper.DifferenceDate(listWeekdays, checkAttendances)
+	attendances := []model.AttendanceModel{}
+	checkIn := time.Now()
+	for _, a := range listAttendances {
+		checkIn, _ = time.Parse("2006-01-02", a)
+		attendances = append(attendances, model.AttendanceModel{
+			CheckIn:   checkIn,
+			CreatedBy: username,
+			Status:    "CHECK IN",
+			Employee:  param.EmployeeID,
+		})
+	}
+
+	if len(attendances) > 0 {
+		qerr = s.attendanceRepo.BulkInsertAttendance(ctx, attendances)
+		if qerr != nil {
+			return qerr
+		}
+	}
+
+	return nil
 }
