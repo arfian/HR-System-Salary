@@ -5,6 +5,7 @@ import (
 	"errors"
 	"net/http"
 	"strings"
+	"time"
 
 	"github.com/gin-gonic/gin"
 	"github.com/rs/zerolog/log"
@@ -18,6 +19,16 @@ type Response struct {
 	RequestId any         `json:"request_id"`
 }
 
+type ginHands struct {
+	Path       string
+	Latency    time.Duration
+	Method     string
+	StatusCode int
+	ClientIP   string
+	MsgStr     string
+	RequestId  string
+}
+
 type ResponseErrorData struct {
 	Type string `json:"data"`
 	Code int64  `json:"success"`
@@ -27,7 +38,56 @@ func ResponseData(c *gin.Context, res *Response) {
 	requestID, _ := c.Get("requestID")
 	res.Success = true
 	res.RequestId = requestID
+
+	SaveAuditLog(c, res.Message)
 	c.JSON(200, res)
+}
+
+func GetIpAddress(c *gin.Context) string {
+	ip := c.GetHeader("X-Real-IP")
+	if ip == "" {
+		ip = c.GetHeader("X-Forwarded-For")
+	}
+
+	if ip == "" {
+		ip = c.ClientIP()
+	}
+	return ip
+}
+
+func SaveAuditLog(c *gin.Context, msg string) {
+	timeStart, _ := c.Get("timeStart")
+	timeParsed, _ := time.Parse(time.RFC3339, timeStart.(string))
+
+	requestID, _ := c.Get("requestID")
+
+	path := c.Request.URL.Path
+	raw := c.Request.URL.RawQuery
+	if raw != "" {
+		path = path + "?" + raw
+	}
+	cData := &ginHands{
+		Path:       path,
+		Latency:    time.Since(timeParsed),
+		Method:     c.Request.Method,
+		StatusCode: c.Writer.Status(),
+		ClientIP:   GetIpAddress(c),
+		MsgStr:     msg,
+		RequestId:  requestID.(string),
+	}
+
+	logSwitch(cData)
+}
+
+func logSwitch(data *ginHands) {
+	switch {
+	case data.StatusCode >= 400 && data.StatusCode < 500:
+		log.Warn().Str("request_id", data.RequestId).Str("method", data.Method).Str("path", data.Path).Dur("resp_time", data.Latency).Int("status", data.StatusCode).Str("client_ip", data.ClientIP).Msg(data.MsgStr)
+	case data.StatusCode >= 500:
+		log.Error().Str("request_id", data.RequestId).Str("method", data.Method).Str("path", data.Path).Dur("resp_time", data.Latency).Int("status", data.StatusCode).Str("client_ip", data.ClientIP).Msg(data.MsgStr)
+	default:
+		log.Info().Str("request_id", data.RequestId).Str("method", data.Method).Str("path", data.Path).Dur("resp_time", data.Latency).Int("status", data.StatusCode).Str("client_ip", data.ClientIP).Msg(data.MsgStr)
+	}
 }
 
 func ResponseError(c *gin.Context, err error, opts ...interface{}) {
@@ -61,7 +121,7 @@ func ResponseError(c *gin.Context, err error, opts ...interface{}) {
 	}
 
 	requestID, _ := c.Get("requestID")
-	log.Error().Err(err).Str("request_id", requestID.(string)).Msg(d)
+	SaveAuditLog(c, d)
 	c.AbortWithStatusJSON(code, &Response{
 		Success: false,
 		Message: d,

@@ -123,11 +123,9 @@ CREATE TABLE IF NOT EXISTS payroll (
 
 CREATE TABLE IF NOT EXISTS audit_log (
     id VARCHAR(50) PRIMARY KEY NOT NULL DEFAULT uuid_generate_v4(),
-    table_name VARCHAR(50) NULL,
+    name_table VARCHAR(50) NULL,
     operation_type VARCHAR(10) NULL,
-    object_id VARCHAR(50) NULL,
-    data jsonb NULL,
-    user_id VARCHAR(50) NULL,
+    query TEXT NULL,
     created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 

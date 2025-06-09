@@ -15,4 +15,6 @@ type IUserRepository interface {
 	GetPasswordByUsername(ctx context.Context, username string) (user []model.AuthUserModel, err error)
 
 	GetEmployeeByUsername(ctx context.Context, username string) (user model.EmployeeModel, err error)
+
+	UpdateLastLogin(ctx context.Context, user model.AuthUserModel) error
 }

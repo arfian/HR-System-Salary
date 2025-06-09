@@ -5,6 +5,7 @@ import (
 )
 
 type IUserHandler interface {
+
 	// (POST /user/register)
 	Register(ctx *gin.Context)
 

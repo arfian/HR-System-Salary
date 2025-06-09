@@ -51,3 +51,9 @@ func (r repository) GetEmployeeByUsername(ctx context.Context, username string) 
 	err = trx.Where("username = ?", username).First(&user).Error
 	return user, err
 }
+
+func (r repository) UpdateLastLogin(ctx context.Context, user model.AuthUserModel) error {
+	trx := transaction.GetTrxContext(ctx, r.db)
+	err := trx.Model(&model.AuthUserModel{}).Where("username = ?", user.Username).Update("last_login", user.LastLogin).Error
+	return err
+}

@@ -20,6 +20,11 @@ import (
 	"hr-system-salary/internal/setup"
 
 	userServer "hr-system-salary/internal/app/user/server"
+
+	_ "hr-system-salary/docs"
+
+	swaggerFiles "github.com/swaggo/files"
+	ginSwagger "github.com/swaggo/gin-swagger"
 )
 
 func StartServer(setupData setup.SetupData) {
@@ -32,6 +37,8 @@ func StartServer(setupData setup.SetupData) {
 	router := gin.Default()
 	router.UseRawPath = true
 	validations.InitStructValidation()
+
+	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
 	// router.GET("/health", setupData.InternalApp.Handler.HealthCheckHandler.HealthCheck)
 

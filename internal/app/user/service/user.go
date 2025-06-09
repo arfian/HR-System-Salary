@@ -39,15 +39,16 @@ func (s *service) Register(ctx context.Context, user model.AuthUserModel, em mod
 		return "", qerr
 	}
 
+	em.Username = user.Username
+	em.CreatedBy = user.Username
+	user.CreatedBy = user.Username
+	user.LastLogin = time.Now()
 	user.Password = hash
 	user, qerr = s.userRepo.InsertUser(ctx, user)
 	if qerr != nil {
 		return "", qerr
 	}
 
-	em.Username = user.Username
-	em.CreatedBy = user.Username
-	user.CreatedBy = user.Username
 	qerr = s.userRepo.InsertEmployee(ctx, em)
 	if qerr != nil {
 		return "", qerr
@@ -89,6 +90,13 @@ func (s service) Login(ctx context.Context, user model.AuthUserModel) (token str
 		return "", qerr
 	}
 	tokenString, err := createToken(users[0], ud)
+
+	users[0].LastLogin = time.Now()
+	users[0].UpdatedBy = user.Username
+	qerr = s.userRepo.UpdateLastLogin(ctx, users[0])
+	if qerr != nil {
+		return "", qerr
+	}
 
 	return tokenString, err
 }

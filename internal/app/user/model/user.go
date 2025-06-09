@@ -13,7 +13,7 @@ type RoleUserModel struct {
 	UpdatedBy string       `json:"updated_by"`
 	CreatedAt time.Time    `json:"created_at" gorm:"autoCreateTime"`
 	UpdatedAt time.Time    `json:"updated_at" gorm:"autoUpdateTime"`
-	DeletedAt time.Time    `json:"deleted_at"`
+	DeletedAt time.Time    `json:"deleted_at" gorm:"default:null"`
 }
 
 func (u RoleUserModel) TableName() string {
@@ -30,7 +30,7 @@ type AuthUserModel struct {
 	UpdatedBy string       `json:"updated_by"`
 	CreatedAt time.Time    `json:"created_at" gorm:"autoCreateTime"`
 	UpdatedAt time.Time    `json:"updated_at" gorm:"autoUpdateTime"`
-	DeletedAt time.Time    `json:"deleted_at"`
+	DeletedAt time.Time    `json:"deleted_at" gorm:"default:null"`
 }
 
 func (u AuthUserModel) TableName() string {
@@ -49,7 +49,7 @@ type EmployeeModel struct {
 	UpdatedBy    string       `json:"updated_by"`
 	CreatedAt    time.Time    `json:"created_at" gorm:"autoCreateTime"`
 	UpdatedAt    time.Time    `json:"updated_at" gorm:"autoUpdateTime"`
-	DeletedAt    time.Time    `json:"deleted_at"`
+	DeletedAt    time.Time    `json:"deleted_at" gorm:"default:null"`
 }
 
 func (u EmployeeModel) TableName() string {

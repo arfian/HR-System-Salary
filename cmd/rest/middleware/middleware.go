@@ -3,10 +3,10 @@ package middleware
 import (
 	"hr-system-salary/pkg/helper"
 	"net/http"
+	"time"
 
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
-	"github.com/rs/zerolog/log"
 )
 
 func CORSMiddleware() gin.HandlerFunc {
@@ -20,6 +20,7 @@ func CORSMiddleware() gin.HandlerFunc {
 
 		requestID := uuid.New().String()
 		c.Set("requestID", requestID)
+		c.Set("timeStart", time.Now().Format(time.RFC3339))
 		c.Writer.Header().Set("X-Request-ID", requestID)
 
 		if c.Request.Method == http.MethodOptions {
@@ -34,7 +35,7 @@ func JWTAuthMiddleware() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		authHeader := c.Request.Header.Get("Authorization")
 		if len(authHeader) == 0 {
-			log.Error().Msg(http.StatusText(http.StatusUnauthorized))
+			helper.SaveAuditLog(c, http.StatusText(http.StatusUnauthorized))
 			c.AbortWithStatusJSON(http.StatusForbidden, helper.Response{
 				Message: http.StatusText(http.StatusUnauthorized),
 				Success: false,
@@ -45,7 +46,7 @@ func JWTAuthMiddleware() gin.HandlerFunc {
 		claims, err := ParseJWTToken(authHeader)
 		if err != nil {
 			requestID, _ := c.Get("requestID")
-			log.Error().Err(err).Str("request_id", requestID.(string)).Msg("token has invalid claims")
+			helper.SaveAuditLog(c, "token has invalid claims")
 			c.AbortWithStatusJSON(http.StatusForbidden, helper.Response{
 				Message:   err.Error(),
 				Success:   false,

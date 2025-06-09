@@ -15,7 +15,7 @@ import (
 type KeyTrx string
 
 // KeyTransaction concrete type for key context value transaction
-const KeyTransaction KeyTrx = KeyTrx("postgredb-meday-trx")
+const KeyTransaction KeyTrx = KeyTrx("postgredb-hr-trx")
 
 type SqlTransaction struct {
 	dbx *db.GormDB
