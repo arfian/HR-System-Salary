@@ -2,6 +2,7 @@ package validations
 
 import (
 	"fmt"
+	"time"
 
 	"github.com/gin-gonic/gin/binding"
 	"github.com/go-playground/validator/v10"
@@ -40,4 +41,9 @@ func InitStructValidation() {
 			}
 		}
 	}
+}
+
+func IsWeekend(t time.Time) bool {
+	day := t.Weekday()
+	return day == time.Saturday || day == time.Sunday
 }

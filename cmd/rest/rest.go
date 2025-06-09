@@ -19,6 +19,7 @@ import (
 
 	"hr-system-salary/internal/setup"
 
+	attendanceServer "hr-system-salary/internal/app/attendance/server"
 	userServer "hr-system-salary/internal/app/user/server"
 
 	_ "hr-system-salary/docs"
@@ -88,6 +89,7 @@ func StartServer(setupData setup.SetupData) {
 func initRoute(router *gin.Engine, internalAppStruct setup.InternalAppStruct) {
 	apiRouter := router.Group("/v1/api")
 	userServer.Routes.NewProfile(apiRouter.Group("/profile"), internalAppStruct.Handler.UserHandler)
+	attendanceServer.Routes.New(apiRouter.Group("/attendance"), internalAppStruct.Handler.AttendanceHandler)
 }
 
 func initPublicRoute(router *gin.Engine, internalAppStruct setup.InternalAppStruct) {
