@@ -13,7 +13,7 @@ type AttendanceModel struct {
 	CheckOut  time.Time    `json:"check_out" gorm:"default:null"`
 	Status    string       `json:"status"`
 	CreatedBy string       `json:"created_by"`
-	UpdatedBy string       `json:"updated_by"`
+	UpdatedBy string       `json:"updated_by" gorm:"default:null"`
 	CreatedAt time.Time    `json:"created_at" gorm:"autoCreateTime"`
 	UpdatedAt time.Time    `json:"updated_at" gorm:"autoUpdateTime"`
 	DeletedAt *time.Time   `json:"deleted_at" gorm:"default:null"`
@@ -31,7 +31,7 @@ type OvertimeModel struct {
 	Status        string       `json:"status"`
 	Payroll       string       `json:"payroll" gorm:"default:null"`
 	CreatedBy     string       `json:"created_by"`
-	UpdatedBy     string       `json:"updated_by"`
+	UpdatedBy     string       `json:"updated_by" gorm:"default:null"`
 	CreatedAt     time.Time    `json:"created_at" gorm:"autoCreateTime"`
 	UpdatedAt     time.Time    `json:"updated_at" gorm:"autoUpdateTime"`
 	DeletedAt     time.Time    `json:"deleted_at" gorm:"default:null"`

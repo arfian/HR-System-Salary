@@ -124,7 +124,7 @@ func (s *service) AddOvertime(ctx context.Context, param payload.ParamOvertime, 
 		Employee:      users[0].ID.String(),
 		OvertimeHours: param.Hours,
 		OvertimeDate:  t,
-		Status:        "APPROVED",
+		Status:        "NOT PAID",
 		CreatedBy:     username,
 	}
 	overtime, qerr = s.attendanceRepo.InsertOvertime(ctx, overtime)

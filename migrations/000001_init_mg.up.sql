@@ -1,15 +1,15 @@
 BEGIN;
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 
-CREATE TABLE IF NOT EXISTS role_user (
-    id VARCHAR(50) PRIMARY KEY NOT NULL DEFAULT uuid_generate_v4(),
-    rolename VARCHAR(50) NOT NULL,
-    created_by VARCHAR(50) NOT NULL,
-    updated_by VARCHAR(50) NULL,
-    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-    updated_at TIMESTAMPTZ NULL,
-    deleted_at TIMESTAMPTZ NULL
-); 
+-- CREATE TABLE IF NOT EXISTS role_user (
+--     id VARCHAR(50) PRIMARY KEY NOT NULL DEFAULT uuid_generate_v4(),
+--     rolename VARCHAR(50) NOT NULL,
+--     created_by VARCHAR(50) NOT NULL,
+--     updated_by VARCHAR(50) NULL,
+--     created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+--     updated_at TIMESTAMPTZ NULL,
+--     deleted_at TIMESTAMPTZ NULL
+-- ); 
 
 CREATE TABLE IF NOT EXISTS auth_user (
     id VARCHAR(50) PRIMARY KEY NOT NULL DEFAULT uuid_generate_v4(),
@@ -66,25 +66,26 @@ CREATE TABLE IF NOT EXISTS overtime (
     deleted_at TIMESTAMPTZ NULL
 );
 
-CREATE TABLE IF NOT EXISTS reimbursement_type (
-    id VARCHAR(50) PRIMARY KEY NOT NULL DEFAULT uuid_generate_v4(),
-    title VARCHAR(20) NOT NULL,
-    reimbursement_max DECIMAL(10, 2) DEFAULT 0.00,
-    created_by VARCHAR(50) NOT NULL,
-    updated_by VARCHAR(50) NULL,
-    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-    updated_at TIMESTAMPTZ NULL,
-    deleted_at TIMESTAMPTZ NULL
-);
+-- CREATE TABLE IF NOT EXISTS reimbursement_type (
+--     id VARCHAR(50) PRIMARY KEY NOT NULL DEFAULT uuid_generate_v4(),
+--     title VARCHAR(20) NOT NULL,
+--     reimbursement_max DECIMAL(10, 2) DEFAULT 0.00,
+--     created_by VARCHAR(50) NOT NULL,
+--     updated_by VARCHAR(50) NULL,
+--     created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+--     updated_at TIMESTAMPTZ NULL,
+--     deleted_at TIMESTAMPTZ NULL
+-- );
 
 CREATE TABLE IF NOT EXISTS reimbursement (
     id VARCHAR(50) PRIMARY KEY NOT NULL DEFAULT uuid_generate_v4(),
     employee VARCHAR(50) NOT NULL,
-    reimbursement DATE NOT NULL,
+    reimbursement_date DATE NOT NULL,
+    reimbursement_amount DECIMAL(10, 2) DEFAULT 0.00,
     reimbursement_type VARCHAR(50) NOT NULL,
     description TEXT NULL,
     status VARCHAR(20) NOT NULL,
-    payroll VARCHAR(50) NOT NULL,
+    payroll VARCHAR(50) NULL,
     created_by VARCHAR(50) NOT NULL,
     updated_by VARCHAR(50) NULL,
     created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
