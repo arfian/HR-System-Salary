@@ -35,7 +35,7 @@ func (r repository) GetAttendanceByUserDate(ctx context.Context, userId string, 
 
 func (r repository) GetDateRangeAttendanceByUser(ctx context.Context, userId string, startDate string, endDate string) (res []string, err error) {
 	trx := transaction.GetTrxContext(ctx, r.db)
-	err = trx.Table("attendance").Select("TO_CHAR(check_in :: DATE, 'yyyy-mm-dd') AS date_check_in").Where("employee = ?", userId).Where("check_in::date >= ?", startDate).Where("check_out::date <= ?", endDate).Pluck("date_check_in", &res).Error
+	err = trx.Table("attendance").Select("TO_CHAR(check_in :: DATE, 'yyyy-mm-dd') AS date_check_in").Where("employee = ?", userId).Where("check_in::date >= ?", startDate).Where("check_in::date <= ?", endDate).Pluck("date_check_in", &res).Error
 	return res, err
 }
 
@@ -44,4 +44,23 @@ func (r repository) BulkInsertAttendance(ctx context.Context, attendances []mode
 	qres := trx.Create(&attendances).Error
 
 	return qres
+}
+
+func (r repository) GetSumOvertimeByUserDate(ctx context.Context, userId string, overtimeDate string) (res int, err error) {
+	trx := transaction.GetTrxContext(ctx, r.db)
+	err = trx.Table("overtime").Select("sum(overtime_hours) as h").Where("employee = ?", userId).Where("overtime_date::date = ?", overtimeDate).Scan(&res).Error
+	return res, err
+}
+
+func (r repository) InsertOvertime(ctx context.Context, overtime model.OvertimeModel) (model.OvertimeModel, error) {
+	trx := transaction.GetTrxContext(ctx, r.db)
+	qres := trx.Create(&overtime).Error
+
+	return overtime, qres
+}
+
+func (r repository) GetAttendanceStatusByUserDate(ctx context.Context, userId string, attendanceDate string, status string) (res []model.AttendanceModel, err error) {
+	trx := transaction.GetTrxContext(ctx, r.db)
+	err = trx.Where("employee = ?", userId).Where("check_in::date = ?", attendanceDate).Where("status = ?", status).Find(&res).Error
+	return res, err
 }

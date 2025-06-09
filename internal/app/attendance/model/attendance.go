@@ -29,7 +29,7 @@ type OvertimeModel struct {
 	OvertimeHours int          `json:"overtime_hours" validate:"required"`
 	OvertimeDate  time.Time    `json:"overtime_date" validate:"required"`
 	Status        string       `json:"status"`
-	Payroll       string       `json:"payroll"`
+	Payroll       string       `json:"payroll" gorm:"default:null"`
 	CreatedBy     string       `json:"created_by"`
 	UpdatedBy     string       `json:"updated_by"`
 	CreatedAt     time.Time    `json:"created_at" gorm:"autoCreateTime"`

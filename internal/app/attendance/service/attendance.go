@@ -97,3 +97,37 @@ func (s *service) BulkInserAttendance(ctx context.Context, param payload.ParamBu
 
 	return nil
 }
+
+func (s *service) AddOvertime(ctx context.Context, param payload.ParamOvertime, username string) (*model.OvertimeModel, error) {
+	users, qerr := s.userRepo.GetUserByUsername(ctx, username)
+	if len(users) == 0 || qerr != nil {
+		return nil, errors.New("user not found")
+	}
+	t := time.Now()
+
+	if !validations.IsWeekend(t) {
+		checkOut, qerr := s.attendanceRepo.GetAttendanceStatusByUserDate(ctx, users[0].ID.String(), t.Format("2006-01-02"), "CHECK OUT")
+		if qerr != nil {
+			return nil, qerr
+		}
+		if len(checkOut) == 0 {
+			return nil, errors.New("overtime must be proposed after check out")
+		}
+	}
+
+	sumHours, qerr := s.attendanceRepo.GetSumOvertimeByUserDate(ctx, users[0].ID.String(), t.Format("2006-01-02"))
+	if (sumHours + param.Hours) > 3 {
+		return nil, errors.New("overtime max 3 hours")
+	}
+
+	overtime := model.OvertimeModel{
+		Employee:      users[0].ID.String(),
+		OvertimeHours: param.Hours,
+		OvertimeDate:  t,
+		Status:        "APPROVED",
+		CreatedBy:     username,
+	}
+	overtime, qerr = s.attendanceRepo.InsertOvertime(ctx, overtime)
+
+	return &overtime, nil
+}

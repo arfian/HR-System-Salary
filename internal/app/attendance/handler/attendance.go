@@ -82,3 +82,33 @@ func (h *handler) AddAttendanceAdmin(c *gin.Context) {
 		Message: "insert successfully",
 	})
 }
+
+func (h *handler) AddOvertime(c *gin.Context) {
+	username := c.GetString("username")
+	var (
+		paramOvertime payload.ParamOvertime
+	)
+
+	if err := c.ShouldBind(&paramOvertime); err != nil {
+		helper.ResponseError(c, err)
+		return
+	}
+
+	validate := validator.New()
+	err := validate.Struct(paramOvertime)
+	if err != nil {
+		helper.ResponseError(c, err)
+		return
+	}
+
+	overtime, err := h.attendanceService.AddOvertime(c.Request.Context(), paramOvertime, username)
+	if err != nil {
+		helper.ResponseError(c, err)
+		return
+	}
+
+	helper.ResponseData(c, &helper.Response{
+		Message: "insert successfully",
+		Data:    overtime,
+	})
+}

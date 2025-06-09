@@ -11,4 +11,7 @@ type IAttendanceHandler interface {
 
 	// (POST /attendance/admin)
 	AddAttendanceAdmin(ctx *gin.Context)
+
+	// (POST /attendance/overtime)
+	AddOvertime(ctx *gin.Context)
 }
