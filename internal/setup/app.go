@@ -77,7 +77,7 @@ func initAppService(initializeApp *InternalAppStruct) {
 	initializeApp.Services.UserService = userService.New(initializeApp.Repositories.userRepo)
 	initializeApp.Services.AttendanceService = attendanceService.New(initializeApp.Repositories.attendanceRepo, initializeApp.Repositories.userRepo)
 	initializeApp.Services.ReimbursementService = reimbursementService.New(initializeApp.Repositories.reimbursementRepo, initializeApp.Repositories.userRepo)
-	initializeApp.Services.PayrollService = payrollService.New(initializeApp.Repositories.payrollRepo, initializeApp.Repositories.userRepo)
+	initializeApp.Services.PayrollService = payrollService.New(initializeApp.Repositories.payrollRepo, initializeApp.Repositories.userRepo, initializeApp.Repositories.reimbursementRepo)
 }
 
 // HANDLER INIT

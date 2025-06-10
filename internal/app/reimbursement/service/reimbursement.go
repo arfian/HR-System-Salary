@@ -33,7 +33,6 @@ func (s *service) AddReimbursement(ctx context.Context, username string, param p
 	reimbursement := model.ReimbursementModel{
 		Employee:            users[0].ID.String(),
 		ReimbursementDate:   reimbursementDate,
-		Status:              "NOT PAID",
 		CreatedBy:           username,
 		Description:         param.Description,
 		ReimbursementType:   param.ReimbursementType,

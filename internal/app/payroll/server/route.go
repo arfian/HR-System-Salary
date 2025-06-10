@@ -16,4 +16,6 @@ var (
 
 func (r routes) New(router *gin.RouterGroup, handler port.IPayrollHandler) {
 	router.POST("/", handler.GeneratePayroll)
+	router.POST("/get-payslip", handler.GetPayslip)
+	router.POST("/get-all-payslip", handler.GetAllPayslip)
 }

@@ -6,6 +6,12 @@ import (
 
 type IPayrollHandler interface {
 
-	// (POST /generate-payroll)
+	// (POST / )
 	GeneratePayroll(ctx *gin.Context)
+
+	// (POST /get-payslip)
+	GetPayslip(ctx *gin.Context)
+
+	// (POST /get-all-payslip)
+	GetAllPayslip(ctx *gin.Context)
 }

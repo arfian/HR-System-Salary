@@ -8,19 +8,22 @@ import (
 	"hr-system-salary/internal/app/payroll/model"
 	"hr-system-salary/internal/app/payroll/payload"
 	"hr-system-salary/internal/app/payroll/port"
+	reimbursementPort "hr-system-salary/internal/app/reimbursement/port"
 	userPort "hr-system-salary/internal/app/user/port"
 	"hr-system-salary/pkg/helper"
 )
 
 type service struct {
-	payrollRepo port.IPayrollRepository
-	userRepo    userPort.IUserRepository
+	payrollRepo       port.IPayrollRepository
+	userRepo          userPort.IUserRepository
+	reimbursementRepo reimbursementPort.IReimbursementRepository
 }
 
-func New(payrollRepo port.IPayrollRepository, userRepo userPort.IUserRepository) port.IPayrollService {
+func New(payrollRepo port.IPayrollRepository, userRepo userPort.IUserRepository, reimbursementRepo reimbursementPort.IReimbursementRepository) port.IPayrollService {
 	return &service{
-		payrollRepo: payrollRepo,
-		userRepo:    userRepo,
+		payrollRepo:       payrollRepo,
+		userRepo:          userRepo,
+		reimbursementRepo: reimbursementRepo,
 	}
 }
 
@@ -98,4 +101,65 @@ func (s *service) InsertPayroll(ctx context.Context, payroll payload.ParamGenera
 	}
 
 	return nil
+}
+
+func (s *service) GetPayrollByMonth(ctx context.Context, payroll payload.ParamGeneratePayroll, username string) (*payload.ResPayslip, error) {
+	users, qerr := s.userRepo.GetUserByUsername(ctx, username)
+	if len(users) == 0 || qerr != nil {
+		return nil, errors.New("user not found")
+	}
+
+	t, _ := time.Parse("2006-01", payroll.PayrollDate)
+	month := t.Month()
+	year := t.Year()
+	payrollData, qerr := s.payrollRepo.GetPayrollByMonthUserId(ctx, int(year), int(month), users[0].ID.String())
+	if qerr != nil {
+		return nil, qerr
+	}
+
+	if len(payrollData) == 0 {
+		return nil, errors.New("Payroll not found")
+	}
+
+	reimbursementsData, qerr := s.reimbursementRepo.GetReimbursementByMonth(ctx, int(year), int(month), users[0].ID.String())
+	if qerr != nil {
+		return nil, qerr
+	}
+
+	res := &payload.ResPayslip{
+		Payslip:        payrollData[0],
+		Reimbursements: reimbursementsData,
+	}
+	return res, nil
+}
+
+func (s *service) GetAllPayrollByMonth(ctx context.Context, payroll payload.ParamGeneratePayroll, username string) (*payload.ResAllPayslip, error) {
+	users, qerr := s.userRepo.GetUserByUsername(ctx, username)
+	if len(users) == 0 || qerr != nil {
+		return nil, errors.New("user not found")
+	}
+
+	t, _ := time.Parse("2006-01", payroll.PayrollDate)
+	month := t.Month()
+	year := t.Year()
+	payrollData, qerr := s.payrollRepo.GetPayrollByMonth(ctx, int(year), int(month))
+	if qerr != nil {
+		return nil, qerr
+	}
+
+	if len(payrollData) == 0 {
+		return nil, errors.New("Payroll not found")
+	}
+
+	var TotalTakeHomePay float32 = 0
+	for _, e := range payrollData {
+		TotalTakeHomePay += e.TotalTakeHomePay
+	}
+
+	res := &payload.ResAllPayslip{
+		Payslip:          payrollData,
+		TotalTakeHomePay: TotalTakeHomePay,
+	}
+
+	return res, nil
 }

@@ -26,3 +26,9 @@ func (r repository) InsertReimbursement(ctx context.Context, reimbursement model
 
 	return reimbursement, qres
 }
+
+func (r repository) GetReimbursementByMonth(ctx context.Context, year int, month int, userId string) (res []model.ReimbursementModel, err error) {
+	trx := transaction.GetTrxContext(ctx, r.db)
+	err = trx.Where("employee", userId).Where("EXTRACT(MONTH FROM reimbursement_date) = ?", month).Where("EXTRACT(YEAR FROM reimbursement_date) = ?", year).Find(&res).Error
+	return res, err
+}
