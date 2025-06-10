@@ -106,6 +106,7 @@ CREATE TABLE IF NOT EXISTS setting_payroll (
 CREATE TABLE IF NOT EXISTS payroll (
     id VARCHAR(50) PRIMARY KEY NOT NULL DEFAULT uuid_generate_v4(),
     employee VARCHAR(50) NOT NULL,
+    payroll_date date NOT NULL,
     count_absence INTEGER NOT NULL DEFAULT 0,
     total_attendence INTEGER NOT NULL DEFAULT 0,
     basic_salary DECIMAL(10, 2) DEFAULT 0.00,

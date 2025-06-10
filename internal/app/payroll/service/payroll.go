@@ -39,6 +39,10 @@ func (s *service) InsertPayroll(ctx context.Context, payroll payload.ParamGenera
 	t, _ := time.Parse("2006-01", payroll.PayrollDate)
 	month := t.Month()
 	year := t.Year()
+	checkPayrollDate, qerr := s.payrollRepo.GetPayrollByMonth(ctx, int(year), int(month))
+	if len(checkPayrollDate) > 0 || qerr != nil {
+		return errors.New("Payroll already exist")
+	}
 
 	settingPayroll, qerr := s.payrollRepo.GetSettingPayroll(ctx)
 	if len(settingPayroll) == 0 {
@@ -55,10 +59,18 @@ func (s *service) InsertPayroll(ctx context.Context, payroll payload.ParamGenera
 		TotalWeekdays         int     = 0
 	)
 	for i := 0; i <= int(pageNo); i++ {
-		employes, qerr := s.userRepo.GetAttendanceOvertimeByEmployee(ctx, limit, i, int(month), int(year))
+		employes, qerr := s.userRepo.GetAttendanceOvertimeByEmployee(ctx, limit, i, int(year), int(month))
 		if qerr != nil {
 			return qerr
 		}
+
+		if len(payrollData) == 0 {
+			employes, qerr = s.userRepo.GetAllEmployee(ctx, limit, i)
+			if qerr != nil {
+				return qerr
+			}
+		}
+
 		payrollData = []model.PayrollModel{}
 		for _, e := range employes {
 			TotalOvertime = (float32(e.SumOvertime) * settingPayroll[0].OvertimeRateHours)
@@ -69,6 +81,7 @@ func (s *service) InsertPayroll(ctx context.Context, payroll payload.ParamGenera
 
 			payrollData = append(payrollData, model.PayrollModel{
 				Employee:              e.ID,
+				PayrollDate:           t,
 				BasicSalary:           e.BasicSalary,
 				TotalAttendence:       e.TotalAttendance,
 				CountOvertime:         e.SumOvertime,
@@ -82,9 +95,12 @@ func (s *service) InsertPayroll(ctx context.Context, payroll payload.ParamGenera
 				TotalTakeHomePay:      (e.BasicSalary - TotalDeductionAbsence + e.TotalReimbursement + TotalOvertime),
 			})
 		}
-		qerr = s.payrollRepo.GeneratePayroll(ctx, payrollData)
-		if qerr != nil {
-			return qerr
+
+		if len(payrollData) > 0 {
+			qerr = s.payrollRepo.GeneratePayroll(ctx, payrollData)
+			if qerr != nil {
+				return qerr
+			}
 		}
 	}
 

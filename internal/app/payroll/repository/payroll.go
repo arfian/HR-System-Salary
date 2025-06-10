@@ -32,3 +32,9 @@ func (r repository) GetSettingPayroll(ctx context.Context) (res []model.SettingP
 	err = trx.Find(&res).Error
 	return res, err
 }
+
+func (r repository) GetPayrollByMonth(ctx context.Context, year int, month int) (res []model.PayrollModel, err error) {
+	trx := transaction.GetTrxContext(ctx, r.db)
+	err = trx.Where("EXTRACT(MONTH FROM payroll_date) = ?", month).Where("EXTRACT(YEAR FROM payroll_date) = ?", year).Find(&res).Error
+	return res, err
+}

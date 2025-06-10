@@ -9,6 +9,7 @@ import (
 type PayrollModel struct {
 	ID                    strfmt.UUID4 `json:"id" gorm:"type:uuid;default:uuid_generate_v4()"`
 	Employee              string       `json:"employee" validate:"required"`
+	PayrollDate           time.Time    `json"payroll_date" validate:"required"`
 	CountAbsence          int          `json:"count_absence"`
 	TotalAttendence       int          `json:"total_attendence"`
 	BasicSalary           float32      `json:"basic_salary"`

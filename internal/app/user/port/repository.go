@@ -21,4 +21,6 @@ type IUserRepository interface {
 	GetAttendanceOvertimeByEmployee(ctx context.Context, limit int, pageNo int, year int, month int) (res []model.AttendanceOvertimeModel, err error)
 
 	GetCountEmployee(ctx context.Context) (res int64, err error)
+
+	GetAllEmployee(ctx context.Context, limit int, pageNo int) (res []model.AttendanceOvertimeModel, err error)
 }

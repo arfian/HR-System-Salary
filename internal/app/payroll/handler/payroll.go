@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"errors"
 	"hr-system-salary/internal/app/payroll/payload"
 	"hr-system-salary/internal/app/payroll/port"
 	"hr-system-salary/pkg/helper"
@@ -21,6 +22,13 @@ func New(payrollService port.IPayrollService) port.IPayrollHandler {
 
 func (h *handler) GeneratePayroll(c *gin.Context) {
 	username := c.GetString("username")
+	rolename := c.GetString("rolename")
+
+	if rolename != "admin" {
+		helper.ResponseError(c, errors.New("only admins with access"))
+		return
+	}
+
 	var (
 		paramGeneratePayroll payload.ParamGeneratePayroll
 	)
