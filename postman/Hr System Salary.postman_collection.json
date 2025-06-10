@@ -1,0 +1,380 @@
+{
+	"info": {
+		"_postman_id": "b64e05a3-fdcc-4e59-9894-03b924d3e69a",
+		"name": "Hr System Salary",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "300526"
+	},
+	"item": [
+		{
+			"name": "Register",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"auth_user\" : {\n        \"username\": \"arfian\",\n        \"password\": \"bagus\"\n    },\n    \"employee\": {\n        \"fullname\": \"arfian bagus\",\n        \"rolename\": \"admin\",\n        \"gender\": \"MALE\",\n        \"salary_amount\": 5000000,\n        \"date_join\": \"2022-02-23\",\n        \"is_active\": true\n    }\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8089/v1/public-api/user/register",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8089",
+					"path": [
+						"v1",
+						"public-api",
+						"user",
+						"register"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Login",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"username\": \"arfian\",\n    \"password\": \"bagus\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8089/v1/public-api/user/login",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8089",
+					"path": [
+						"v1",
+						"public-api",
+						"user",
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get User",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3NDkzNTM5MTQsImZ1bGxuYW1lIjoiYXJmaWFuIGJhZ3VzIiwiaWF0IjoxNzQ5MzUwMzE0LCJpZCI6IjQ5NDE3MmI0LTczNGItNGY1NS1iMDdlLTYzYzZhODE5ZjRkZiIsInJvbGVuYW1lIjoiYWRtaW4iLCJ1c2VybmFtZSI6ImFyZmlhbiJ9.EloL_aYx20xrXdJ8NM46V_kagkqBBAfF3y2G-CvK0bs",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8089/v1/api/profile/",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8089",
+					"path": [
+						"v1",
+						"api",
+						"profile",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Add Attendance Employee",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3NDk1MzA3NTYsImZ1bGxuYW1lIjoiYXJmaWFuIGJhZ3VzIiwiaWF0IjoxNzQ5NTI3MTU2LCJpZCI6IjQ0NGU4ODkzLTEyNTEtNGNmNy04YzFjLWRmZmQwODhmYzM1ZSIsInJvbGVuYW1lIjoiYWRtaW4iLCJ1c2VybmFtZSI6ImFyZmlhbiJ9.e0CLFPR_dkLnh_W3bcZf2wfg7ASAC83ahevdxE94Ldw",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8089/v1/api/attendance/employee",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8089",
+					"path": [
+						"v1",
+						"api",
+						"attendance",
+						"employee"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Add Attendance Admin",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3NDk1MzA3NTYsImZ1bGxuYW1lIjoiYXJmaWFuIGJhZ3VzIiwiaWF0IjoxNzQ5NTI3MTU2LCJpZCI6IjQ0NGU4ODkzLTEyNTEtNGNmNy04YzFjLWRmZmQwODhmYzM1ZSIsInJvbGVuYW1lIjoiYWRtaW4iLCJ1c2VybmFtZSI6ImFyZmlhbiJ9.e0CLFPR_dkLnh_W3bcZf2wfg7ASAC83ahevdxE94Ldw",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"employee_id\": \"f974891a-974d-4c0d-a218-e0ade1520ea5\",\n    \"start_date\": \"2025-06-01\",\n    \"end_date\": \"2025-06-20\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8089/v1/api/attendance/admin",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8089",
+					"path": [
+						"v1",
+						"api",
+						"attendance",
+						"admin"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Add Overtime",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3NDk1MzA3NTYsImZ1bGxuYW1lIjoiYXJmaWFuIGJhZ3VzIiwiaWF0IjoxNzQ5NTI3MTU2LCJpZCI6IjQ0NGU4ODkzLTEyNTEtNGNmNy04YzFjLWRmZmQwODhmYzM1ZSIsInJvbGVuYW1lIjoiYWRtaW4iLCJ1c2VybmFtZSI6ImFyZmlhbiJ9.e0CLFPR_dkLnh_W3bcZf2wfg7ASAC83ahevdxE94Ldw",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"hours\": 2\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8089/v1/api/attendance/overtime",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8089",
+					"path": [
+						"v1",
+						"api",
+						"attendance",
+						"overtime"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Add Reimbursement",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3NDk1MzU1NDYsImZ1bGxuYW1lIjoiYXJmaWFuIGJhZ3VzIiwiaWF0IjoxNzQ5NTMxOTQ2LCJpZCI6IjQ0NGU4ODkzLTEyNTEtNGNmNy04YzFjLWRmZmQwODhmYzM1ZSIsInJvbGVuYW1lIjoiYWRtaW4iLCJ1c2VybmFtZSI6ImFyZmlhbiJ9.CMrHo7Zj-E9tq5frnBMnGsTuFlTG-J8KhVbsFNHxPW0",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"reimbursement_date\": \"2025-02-06\",\n    \"description\": \"Abc\",\n    \"reimbursement_amount\": 100,\n    \"reimbursement_type\": \"test\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8089/v1/api/reimbursement",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8089",
+					"path": [
+						"v1",
+						"api",
+						"reimbursement"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Generate Payroll",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3NDk1MzE2NzgsImZ1bGxuYW1lIjoiYXJmaWFuIGJhZ3VzIiwiaWF0IjoxNzQ5NTI4MDc4LCJpZCI6IjQ0NGU4ODkzLTEyNTEtNGNmNy04YzFjLWRmZmQwODhmYzM1ZSIsInJvbGVuYW1lIjoiYWRtaW4iLCJ1c2VybmFtZSI6ImFyZmlhbiJ9.gljkgKdoOZa3h3FDXbmynZgzpiwTD__CxTdoyCJx1D8",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"payroll_date\": \"2025-06\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8089/v1/api/payroll",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8089",
+					"path": [
+						"v1",
+						"api",
+						"payroll"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Generate Get Payslip",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3NDk1MzU1NDYsImZ1bGxuYW1lIjoiYXJmaWFuIGJhZ3VzIiwiaWF0IjoxNzQ5NTMxOTQ2LCJpZCI6IjQ0NGU4ODkzLTEyNTEtNGNmNy04YzFjLWRmZmQwODhmYzM1ZSIsInJvbGVuYW1lIjoiYWRtaW4iLCJ1c2VybmFtZSI6ImFyZmlhbiJ9.CMrHo7Zj-E9tq5frnBMnGsTuFlTG-J8KhVbsFNHxPW0",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"payroll_date\": \"2025-06\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8089/v1/api/payroll/get-payslip",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8089",
+					"path": [
+						"v1",
+						"api",
+						"payroll",
+						"get-payslip"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Generate Get All Payslip",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3NDk1MzU1NDYsImZ1bGxuYW1lIjoiYXJmaWFuIGJhZ3VzIiwiaWF0IjoxNzQ5NTMxOTQ2LCJpZCI6IjQ0NGU4ODkzLTEyNTEtNGNmNy04YzFjLWRmZmQwODhmYzM1ZSIsInJvbGVuYW1lIjoiYWRtaW4iLCJ1c2VybmFtZSI6ImFyZmlhbiJ9.CMrHo7Zj-E9tq5frnBMnGsTuFlTG-J8KhVbsFNHxPW0",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"payroll_date\": \"2025-06\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8089/v1/api/payroll/get-all-payslip",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8089",
+					"path": [
+						"v1",
+						"api",
+						"payroll",
+						"get-all-payslip"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
