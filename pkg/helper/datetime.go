@@ -1,6 +1,9 @@
 package helper
 
-import "time"
+import (
+	"fmt"
+	"time"
+)
 
 func ListWeekdays(startDate, endDate string) []string {
 	start, _ := time.Parse("2006-01-02", startDate)
@@ -17,6 +20,15 @@ func ListWeekdays(startDate, endDate string) []string {
 		}
 	}
 	return listWeekdays
+}
+
+func CountWeekdays(month int, year int) int {
+	start := fmt.Sprintf("%d-%d-01", year, month)
+	startMonth, _ := time.Parse("2006-01-02", start)
+	lastOfMonth := startMonth.AddDate(0, 1, -1)
+	end := lastOfMonth.Format("2006-01-02")
+	listWeekdays := ListWeekdays(start, end)
+	return len(listWeekdays)
 }
 
 func DifferenceDate(a, b []string) (diff []string) {
