@@ -134,4 +134,26 @@ CREATE TABLE IF NOT EXISTS audit_log (
 
 INSERT INTO "setting_payroll" ("end_cutoff", "overtime_rate_hours", "created_by") VALUES ('25', '500000', 'admin');
 
+INSERT INTO "auth_user" ("username","password","is_active","last_login","created_by","created_at","updated_at") VALUES ('adminuser','$2a$14$L2nr.h9Wg46uxT4PNBfYuOX5x4LMYVIjUsSgjdmfhv3jXhyUxEzVu',false,'2025-06-10 13:49:44.976','arfian5','2025-06-10 13:49:44.977','2025-06-10 13:49:44.977');
+
+INSERT INTO "employee" ("username","fullname","rolename","gender","date_join","salary_amount","created_by","created_at","updated_at") VALUES ('adminuser','admin test','admin','MALE','2022-02-23',5000000,'arfian5','2025-06-10 13:49:45.014','2025-06-10 13:49:45.014');
+
 COMMIT;
+
+DO $FN$
+BEGIN
+  FOR counter IN 1..100 LOOP
+    RAISE NOTICE 'Counter: %', counter;
+
+    EXECUTE $$ INSERT INTO "auth_user" ("username","password","is_active","last_login","created_by","created_at","updated_at") VALUES ('employee' || $1,'$2a$14$L2nr.h9Wg46uxT4PNBfYuOX5x4LMYVIjUsSgjdmfhv3jXhyUxEzVu',false,'2025-06-10 13:49:44.976','system','2025-06-10 13:49:44.977','2025-06-10 13:49:44.977') RETURNING id $$ 
+      USING counter;
+  END LOOP;
+
+  FOR counter IN 1..100 LOOP
+    RAISE NOTICE 'Counter: %', counter;
+
+    EXECUTE $$ INSERT INTO "employee" ("username","fullname","rolename","gender","date_join","salary_amount","created_by","created_at","updated_at") VALUES ('employee' || $1,'Employee Test ' || $1,'employee','MALE','2022-02-23',floor(random()*(30000000)),'system','2025-06-10 13:49:45.014','2025-06-10 13:49:45.014') RETURNING id $$ 
+      USING counter;
+  END LOOP;
+END;
+$FN$
