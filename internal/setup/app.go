@@ -26,6 +26,11 @@ import (
 	reimbursementPorts "hr-system-salary/internal/app/reimbursement/port"
 	reimbursementRepo "hr-system-salary/internal/app/reimbursement/repository"
 	reimbursementService "hr-system-salary/internal/app/reimbursement/service"
+
+	payrollHandler "hr-system-salary/internal/app/payroll/handler"
+	payrollPorts "hr-system-salary/internal/app/payroll/port"
+	payrollRepo "hr-system-salary/internal/app/payroll/repository"
+	payrollService "hr-system-salary/internal/app/payroll/service"
 )
 
 type InternalAppStruct struct {
@@ -38,6 +43,7 @@ type initRepositoriesApp struct {
 	userRepo          userPorts.IUserRepository
 	attendanceRepo    attendancePorts.IAttendanceRepository
 	reimbursementRepo reimbursementPorts.IReimbursementRepository
+	payrollRepo       payrollPorts.IPayrollRepository
 	TrxHandler        transaction.ISqlTransaction
 	// HealthCheckRepo healthCheckPorts.IHealthCheckRepository
 	dbInstance *gorm.DB
@@ -48,6 +54,7 @@ func initAppRepo(gormDB *db.GormDB, initializeApp *InternalAppStruct) {
 	initializeApp.Repositories.userRepo = userRepo.NewRepository(gormDB)
 	initializeApp.Repositories.attendanceRepo = attendanceRepo.NewRepository(gormDB)
 	initializeApp.Repositories.reimbursementRepo = reimbursementRepo.NewRepository(gormDB)
+	initializeApp.Repositories.payrollRepo = payrollRepo.NewRepository(gormDB)
 	// initializeApp.Repositories.HealthCheckRepo = healthCheckRepo.NewHealthCheckRepository(gormDB.DB, rc)
 
 	// Initiate trxRepo handler
@@ -61,6 +68,7 @@ type initServicesApp struct {
 	UserService          userPorts.IUserService
 	AttendanceService    attendancePorts.IAttendanceService
 	ReimbursementService reimbursementPorts.IReimbursementService
+	PayrollService       payrollPorts.IPayrollService
 	// HealthCheckService healthCheckPorts.IHealthCheckService
 }
 
@@ -69,6 +77,7 @@ func initAppService(initializeApp *InternalAppStruct) {
 	initializeApp.Services.UserService = userService.New(initializeApp.Repositories.userRepo)
 	initializeApp.Services.AttendanceService = attendanceService.New(initializeApp.Repositories.attendanceRepo, initializeApp.Repositories.userRepo)
 	initializeApp.Services.ReimbursementService = reimbursementService.New(initializeApp.Repositories.reimbursementRepo, initializeApp.Repositories.userRepo)
+	initializeApp.Services.PayrollService = payrollService.New(initializeApp.Repositories.payrollRepo, initializeApp.Repositories.userRepo)
 }
 
 // HANDLER INIT
@@ -76,6 +85,7 @@ type InitHandlerApp struct {
 	UserHandler          userPorts.IUserHandler
 	AttendanceHandler    attendancePorts.IAttendanceHandler
 	ReimbursementHandler reimbursementPorts.IReimbursementHandler
+	PayrollHandler       payrollPorts.IPayrollHandler
 	// HealthCheckHandler healthCheckPorts.IHealthCheckHandler
 }
 
@@ -84,4 +94,5 @@ func initAppHandler(initializeApp *InternalAppStruct) {
 	initializeApp.Handler.UserHandler = userHandler.New(initializeApp.Services.UserService)
 	initializeApp.Handler.AttendanceHandler = attendanceHandler.New(initializeApp.Services.AttendanceService)
 	initializeApp.Handler.ReimbursementHandler = reimbursementHandler.New(initializeApp.Services.ReimbursementService)
+	initializeApp.Handler.PayrollHandler = payrollHandler.New(initializeApp.Services.PayrollService)
 }

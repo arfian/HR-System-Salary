@@ -57,3 +57,16 @@ func (r repository) UpdateLastLogin(ctx context.Context, user model.AuthUserMode
 	err := trx.Model(&model.AuthUserModel{}).Where("username = ?", user.Username).Update("last_login", user.LastLogin).Error
 	return err
 }
+
+func (r repository) GetAttendanceOvertimeByEmployee(ctx context.Context, limit int, pageNo int, year int, month int) (res []model.AttendanceOvertimeModel, err error) {
+	trx := transaction.GetTrxContext(ctx, r.db)
+	err = trx.Raw("SELECT em.ID, em.username, em.fullname, em.salary_amount AS basic_salary, COUNT(a.employee) AS total_attendance, SUM(o.overtime_hours) AS sum_overtime, SUM(r.reimbursement_amount) as total_reimbursement FROM auth_user au INNER JOIN employee em ON au.username=em.username LEFT JOIN attendance a ON au.id=a.employee LEFT JOIN overtime o ON au.ID=o.employee LEFT JOIN reimbursement r ON r.employee=au.id WHERE (EXTRACT(MONTH FROM r.reimbursement_date) = 6 AND EXTRACT(YEAR FROM r.reimbursement_date) = 2025) OR (EXTRACT(MONTH FROM a.check_in) = 6 AND EXTRACT(YEAR FROM a.check_in) = 2025) OR (EXTRACT(MONTH FROM o.overtime_date) = 6 AND EXTRACT(YEAR FROM o.overtime_date) = 2025) GROUP BY em.ID OFFSET ? LIMIT ?", pageNo, limit).Scan(&res).Error
+	return res, err
+}
+
+func (r repository) GetCountEmployee(ctx context.Context) (res int64, err error) {
+	trx := transaction.GetTrxContext(ctx, r.db)
+	var count int64 = 0
+	err = trx.Model(&model.EmployeeModel{}).Count(&count).Error
+	return count, err
+}

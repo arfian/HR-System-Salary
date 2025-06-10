@@ -17,4 +17,8 @@ type IUserRepository interface {
 	GetEmployeeByUsername(ctx context.Context, username string) (user model.EmployeeModel, err error)
 
 	UpdateLastLogin(ctx context.Context, user model.AuthUserModel) error
+
+	GetAttendanceOvertimeByEmployee(ctx context.Context, limit int, pageNo int, year int, month int) (res []model.AttendanceOvertimeModel, err error)
+
+	GetCountEmployee(ctx context.Context) (res int64, err error)
 }

@@ -55,3 +55,13 @@ type EmployeeModel struct {
 func (u EmployeeModel) TableName() string {
 	return "employee"
 }
+
+type AttendanceOvertimeModel struct {
+	ID                 string  `json:"id"`
+	Username           string  `json:"username"`
+	Fullname           string  `json:"fullname"`
+	BasicSalary        float32 `json:"basic_salary"`
+	TotalAttendance    int     `json:"total_attendance"`
+	SumOvertime        int     `json:"sum_overtime"`
+	TotalReimbursement float32 `json:"total_reimbursement"`
+}

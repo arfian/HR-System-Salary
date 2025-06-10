@@ -95,7 +95,7 @@ CREATE TABLE IF NOT EXISTS reimbursement (
 
 CREATE TABLE IF NOT EXISTS setting_payroll (
     id VARCHAR(50) PRIMARY KEY NOT NULL DEFAULT uuid_generate_v4(),
-    end_cutoff DATE NOT NULL,
+    end_cutoff int NOT NULL,
     overtime_rate_hours DECIMAL(10, 2) DEFAULT 0.00,
     created_by VARCHAR(50) NOT NULL,
     updated_by VARCHAR(50) NULL,
@@ -130,5 +130,7 @@ CREATE TABLE IF NOT EXISTS audit_log (
     query TEXT NULL,
     created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
+
+INSERT INTO "setting_payroll" ("end_cutoff", "overtime_rate_hours", "created_by") VALUES ('25', '500000', 'admin');
 
 COMMIT;

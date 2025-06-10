@@ -20,6 +20,7 @@ import (
 	"hr-system-salary/internal/setup"
 
 	attendanceServer "hr-system-salary/internal/app/attendance/server"
+	payrollServer "hr-system-salary/internal/app/payroll/server"
 	reimbursementServer "hr-system-salary/internal/app/reimbursement/server"
 	userServer "hr-system-salary/internal/app/user/server"
 
@@ -92,6 +93,7 @@ func initRoute(router *gin.Engine, internalAppStruct setup.InternalAppStruct) {
 	userServer.Routes.NewProfile(apiRouter.Group("/profile"), internalAppStruct.Handler.UserHandler)
 	attendanceServer.Routes.New(apiRouter.Group("/attendance"), internalAppStruct.Handler.AttendanceHandler)
 	reimbursementServer.Routes.New(apiRouter.Group("/reimbursement"), internalAppStruct.Handler.ReimbursementHandler)
+	payrollServer.Routes.New(apiRouter.Group("/payroll"), internalAppStruct.Handler.PayrollHandler)
 }
 
 func initPublicRoute(router *gin.Engine, internalAppStruct setup.InternalAppStruct) {
