@@ -64,13 +64,6 @@ func (s *service) InsertPayroll(ctx context.Context, payroll payload.ParamGenera
 			return qerr
 		}
 
-		if len(payrollData) == 0 {
-			employes, qerr = s.userRepo.GetAllEmployee(ctx, limit, i)
-			if qerr != nil {
-				return qerr
-			}
-		}
-
 		payrollData = []model.PayrollModel{}
 		for _, e := range employes {
 			TotalOvertime = (float32(e.SumOvertime) * settingPayroll[0].OvertimeRateHours)
